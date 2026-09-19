@@ -1,33 +1,87 @@
-# GitHub Actions CI workflow for backend and frontend
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
 
 jobs:
   backend:
     runs-on: ubuntu-latest
+
     services:
       postgres:
-        image: postgres:15
+        image: postgres:15-alpine
         env:
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: weigh2go
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-      - run: pip install -r backend/requirements.txt
-      - run: pytest backend/app/tests --cov
-      - run: pylint backend/app --exit-zero
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        pip install -r requirements.txt
+
+    - name: Lint with pylint
+      run: |
+        cd backend
+        pylint app --exit-zero
+
+    - name: Run tests with pytest
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/weigh2go
+      run: |
+        cd backend
+        pytest app/tests --cov=app --cov-report=xml --cov-report=term
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./backend/coverage.xml
 
   frontend:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-      - run: cd frontend && npm install
-      - run: npm run lint
-      - run: npm test
-      - run: npm run build
+    - uses: actions/checkout@v3
+
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: "18"
+
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Lint
+      run: |
+        cd frontend
+        npm run lint
+
+    - name: Run tests
+      run: |
+        cd frontend
+        npm test
+
+    - name: Build
+      run: |
+        cd frontend
+        npm run build
