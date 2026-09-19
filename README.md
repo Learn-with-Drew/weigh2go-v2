@@ -5,6 +5,7 @@ A full-stack web application for tracking weight and calorie intake to help user
 ## Overview
 
 **Weigh2Go** is a rebuild of the original Android app, now reimagined as a modern web application. The core mission is to help users:
+
 - Log and visualize their weight progress over time
 - Track daily food intake and calorie consumption
 - Compare actual calories consumed vs. their daily goals
@@ -22,28 +23,33 @@ This rebuild is designed to showcase modern web development practices, including
 ## Features (Core)
 
 ✅ **Authentication**
+
 - User registration and login with email/password
 - httpOnly cookies + CSRF protection
 - Secure session management
 
 ✅ **Weight Logging**
+
 - Log daily weight
 - View weight trends over 7, 14, 30, or 90 days
 - Trend visualization with charts
 - One log per day (updates if re-submitted)
 
 ✅ **Calorie Tracking**
+
 - Log food and calorie intake
 - Multiple entries per day
 - View daily calorie totals vs. target
 - Daily summary dashboard
 
 ✅ **Goals & Settings**
+
 - Set daily calorie target (default: 2000)
 - Choose weight unit (lbs or kg)
 - Editable at any time
 
 📅 **Dashboard**
+
 - Daily summary: total calories, remaining, weight logged today
 - Weekly tracking: days weight was logged this week
 - Date-based filtering
@@ -58,25 +64,28 @@ This rebuild is designed to showcase modern web development practices, including
 ### Setup
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/Learn-with-Drew/weigh2go-v2.git
    cd weigh2go-v2
    ```
 
 2. **Copy environment variables**:
+
    ```bash
    cp .env.example .env
    ```
 
 3. **Start the application**:
+
    ```bash
    docker-compose up -d
    ```
 
 4. **Access the application**:
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:8000
-   - API Docs: http://localhost:8000/docs
+   - Frontend: <http://localhost:5173>
+   - Backend API: <http://localhost:8000>
+   - API Docs: <http://localhost:8000/docs>
 
 ### Initial Setup (First Time)
 
@@ -87,11 +96,13 @@ The database will be created automatically. No manual migrations needed for the 
 ### Run Tests
 
 **Backend** (with coverage):
+
 ```bash
 docker-compose exec backend pytest app/tests --cov
 ```
 
 **Frontend**:
+
 ```bash
 docker-compose exec frontend npm test
 ```
@@ -99,11 +110,13 @@ docker-compose exec frontend npm test
 ### Lint & Format
 
 **Backend**:
+
 ```bash
 docker-compose exec backend pylint app
 ```
 
 **Frontend**:
+
 ```bash
 docker-compose exec frontend npm run lint
 ```
@@ -124,7 +137,7 @@ docker-compose down
 
 ## Project Structure
 
-```
+```text
 weigh2go-v2/
 ├── backend/               # FastAPI backend
 │   ├── app/
@@ -153,43 +166,50 @@ weigh2go-v2/
 
 ## API Documentation
 
-Once the backend is running, visit **http://localhost:8000/docs** for interactive Swagger documentation.
+Once the backend is running, visit **<http://localhost:8000/docs>** for interactive Swagger documentation.
 
 ### Key Endpoints
 
 **Auth**:
+
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
 - `GET /api/auth/me` - Get current user
 
 **Weight**:
+
 - `POST /api/weight` - Create weight log
 - `GET /api/weight` - Get all weight logs
 - `GET /api/weight/trend?days=30` - Get weight trend
 - `DELETE /api/weight/{id}` - Delete weight log
 
 **Food**:
+
 - `POST /api/food` - Create food log
 - `GET /api/food` - Get food logs
 - `DELETE /api/food/{id}` - Delete food log
 
 **Dashboard**:
+
 - `GET /api/dashboard/summary?logged_date=2026-09-18` - Get daily summary
 
 **Goals**:
+
 - `GET /api/goals` - Get user goals
 - `PUT /api/goals` - Update user goals
 
 ## Testing Strategy
 
 ### Backend
+
 - Unit tests for all endpoints
 - Integration tests with PostgreSQL
 - Target: 80%+ code coverage
 - Tests run automatically on push via GitHub Actions
 
 ### Frontend
+
 - Component tests with React Testing Library
 - Service/API tests with Vitest
 - Test files co-located with components
@@ -205,6 +225,7 @@ Once the backend is running, visit **http://localhost:8000/docs** for interactiv
 ## CI/CD Pipeline
 
 GitHub Actions automatically:
+
 - Runs all tests on push/PR
 - Lints backend (pylint) and frontend (ESLint)
 - Builds Docker images
