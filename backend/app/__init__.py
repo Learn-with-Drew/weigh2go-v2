@@ -1,10 +1,10 @@
-from app.core.config import settings
+from app.core.config import Settings
 from app.core.security import hash_password, verify_password, create_access_token, decode_access_token
 from app.api.routes import auth, weight, food, goals, dashboard
 from app.api.dependencies import get_current_user
 
 __all__ = [
-    "settings",
+    "Settings",
     "hash_password",
     "verify_password",
     "create_access_token",
