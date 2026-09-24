@@ -6,10 +6,12 @@ from app.core.config import settings
 from app.database import Base, engine
 from app.api.routes import auth, weight, food, goals, dashboard
 
-# Create tables
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(title="Weigh2Go API", version="1.0.0")
+
+@app.on_event("startup")
+def startup_event():
+    """ Create tables when the application starts serving """
+    Base.metadata.create_all(bind=engine)
 
 # Add CORS middleware
 app.add_middleware(
