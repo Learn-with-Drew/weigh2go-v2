@@ -16,6 +16,12 @@ class UserRegister(UserBase):
     password: str
 
 
+class UserLogin(UserBase):
+    """User login schema."""
+
+    password: str
+
+
 class UserResponse(UserBase):
     """User response schema."""
 
