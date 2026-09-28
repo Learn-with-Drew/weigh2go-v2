@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import User, UserGoal
-from app.schemas import UserRegister, UserResponse
+from app.schemas import UserRegister, UserLogin, UserResponse
 from app.core.security import hash_password, verify_password, create_access_token
 from app.api.dependencies import get_current_user
 
@@ -41,10 +41,10 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/login")
-def login(email: str, password: str, response: Response, db: Session = Depends(get_db)):
+def login(credentials: UserLogin, response: Response, db: Session = Depends(get_db)):
     """Login user and return JWT token."""
-    user = db.query(User).filter(User.email == email).first()
-    if not user or not verify_password(password, user.password_hash):
+    user = db.query(User).filter(User.email == credentials.email).first()
+    if not user or not verify_password(credentials.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
