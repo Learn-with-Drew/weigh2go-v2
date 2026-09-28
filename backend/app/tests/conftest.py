@@ -1,18 +1,23 @@
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 from fastapi.testclient import TestClient
 
 from app.main import app
 from app.database import Base, get_db
 
 
-# Use in-memory SQLite for tests (no external DB dependency)
+# Use in-memory SQLite for tests (no external DB dependency).
+# StaticPool forces every connection to reuse the SAME underlying
+# connection, since a plain in-memory SQLite DB is wiped whenever a
+# new connection is opened (each connection = its own empty DB).
 SQLALCHEMY_TEST_DATABASE_URL = "sqlite:///:memory:"
 
 engine = create_engine(
     SQLALCHEMY_TEST_DATABASE_URL,
     connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
