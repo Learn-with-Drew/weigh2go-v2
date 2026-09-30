@@ -1,6 +1,6 @@
-from typing import Generator
+from typing import Generator, Optional
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -8,8 +8,13 @@ from app.models import User
 from app.core.security import decode_access_token
 
 
+def get_token_from_cookie(request: Request) -> Optional[str]:
+    """Extract the access token from the request's cookies."""
+    return request.cookies.get("access_token")
+
+
 def get_current_user(
-    token: str = Depends(lambda req: req.cookies.get("access_token")),
+    token: Optional[str] = Depends(get_token_from_cookie),
     db: Session = Depends(get_db),
 ) -> User:
     """Get current authenticated user from JWT token in cookie."""

@@ -1,8 +1,7 @@
-# Pydantic requests/response schemas
 from datetime import datetime, date
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 class UserBase(BaseModel):
@@ -17,14 +16,19 @@ class UserRegister(UserBase):
     password: str
 
 
+class UserLogin(UserBase):
+    """User login schema."""
+
+    password: str
+
+
 class UserResponse(UserBase):
     """User response schema."""
 
     id: UUID
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserGoalUpdate(BaseModel):
@@ -42,8 +46,7 @@ class UserGoalResponse(BaseModel):
     daily_calorie_target: int
     weight_unit: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class WeightLogCreate(BaseModel):
@@ -62,8 +65,7 @@ class WeightLogResponse(BaseModel):
     logged_date: date
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class WeightTrendPoint(BaseModel):
@@ -92,8 +94,7 @@ class FoodLogResponse(BaseModel):
     logged_date: date
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class DashboardSummary(BaseModel):

@@ -1,4 +1,5 @@
-# FastAPI app setup
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -6,10 +7,15 @@ from app.core.config import settings
 from app.database import Base, engine
 from app.api.routes import auth, weight, food, goals, dashboard
 
-# Create tables
-Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Weigh2Go API", version="1.0.0")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Create database tables when the app actually starts serving."""
+    Base.metadata.create_all(bind=engine)
+    yield
+
+
+app = FastAPI(title="Weigh2Go API", version="1.0.0", lifespan=lifespan)
 
 # Add CORS middleware
 app.add_middleware(

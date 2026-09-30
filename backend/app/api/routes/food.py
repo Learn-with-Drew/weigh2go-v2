@@ -1,3 +1,4 @@
+import uuid
 from datetime import date
 from typing import List
 
@@ -56,6 +57,14 @@ def delete_food_log(
     db: Session = Depends(get_db),
 ):
     """Delete a food log by ID."""
+    try:
+        uuid.UUID(log_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Food log not found",
+        )
+
     log = db.query(FoodLog).filter(
         FoodLog.id == log_id,
         FoodLog.user_id == current_user.id,
