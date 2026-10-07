@@ -37,7 +37,7 @@ const AddWeightForm = ({ onLogged }: AddWeightFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="add-weight-form" aria-label="Log weight">
+    <form onSubmit={handleSubmit} className="add-weight-form" noValidate>
       <div className="form-field">
         <label htmlFor="weight">Weight</label>
         <input
