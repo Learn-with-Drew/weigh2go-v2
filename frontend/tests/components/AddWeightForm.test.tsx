@@ -4,7 +4,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import AddWeightForm from '../../src/components/Forms/AddWeightForm';
 import { weightService } from '../../src/services/weightService';
 
-vi.mock('../../services/weightService', () => ({
+vi.mock('../../src/services/weightService', () => ({
   weightService: {
     createLog: vi.fn(),
   },

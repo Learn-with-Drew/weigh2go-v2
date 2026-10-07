@@ -1,10 +1,10 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import LoginForm from '../../components/Auth/LoginForm';
+import LoginForm from '../../src/components/Auth/LoginForm';
 
 const loginMock = vi.fn();
 
-vi.mock('../../hooks/useAuth', () => ({
+vi.mock('../../src/hooks/useAuth', () => ({
   useAuth: () => ({
     login: loginMock,
     error: null,
