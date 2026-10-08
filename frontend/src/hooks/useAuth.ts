@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { User } from '../types';
 import { authService } from '../services/authService';
+
+function getErrorMessage(err: unknown, fallback: string): string {
+  if (axios.isAxiosError(err)) {
+    return err.response?.data?.detail ?? fallback;
+  }
+  return fallback;
+}
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -28,8 +36,8 @@ export const useAuth = () => {
       await authService.login({ email, password });
       const currentUser = await authService.getCurrentUser();
       setUser(currentUser);
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Login failed');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Login failed'));
       throw err;
     }
   };
@@ -39,8 +47,8 @@ export const useAuth = () => {
       setError(null);
       const newUser = await authService.register({ email, password });
       setUser(newUser);
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Registration failed');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Registration failed'));
       throw err;
     }
   };
@@ -49,7 +57,7 @@ export const useAuth = () => {
     try {
       await authService.logout();
       setUser(null);
-    } catch (err: any) {
+    } catch (err) {
       setError('Logout failed');
       throw err;
     }
