@@ -43,7 +43,8 @@ button:focus-visible {
 }
 
 .auth-form,
-.add-weight-form {
+.add-weight-form,
+.add-food-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -96,7 +97,8 @@ button:focus-visible {
   gap: 1rem;
 }
 
-.weight-log-list {
+.weight-log-list,
+.food-log-list {
   list-style: none;
   padding: 0;
   display: flex;
@@ -104,7 +106,8 @@ button:focus-visible {
   gap: 0.5rem;
 }
 
-.weight-log-item {
+.weight-log-item,
+.food-log-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -119,6 +122,25 @@ button:focus-visible {
   color: #ff6b6b;
   padding: 0.25rem 0.6rem;
   font-size: 0.8rem;
+}
+
+.food-log-name {
+  flex: 1;
+}
+
+.food-log-calories {
+  margin: 0 1rem;
+  opacity: 0.8;
+}
+
+.food-total {
+  text-align: right;
+  margin: 0.5rem 0 0;
+}
+
+.date-picker {
+  max-width: 220px;
+  margin-bottom: 1rem;
 }
 
 .empty-state {
