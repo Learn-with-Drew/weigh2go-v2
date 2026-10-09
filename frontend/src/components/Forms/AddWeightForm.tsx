@@ -1,15 +1,14 @@
 import { FormEvent, useState } from 'react';
 import { weightService } from '../../services/weightService';
+import { todayLocal } from '../../utils/date';
 
 interface AddWeightFormProps {
   onLogged: () => void;
 }
 
-const today = () => new Date().toISOString().split('T')[0];
-
 const AddWeightForm = ({ onLogged }: AddWeightFormProps) => {
   const [weight, setWeight] = useState('');
-  const [loggedDate, setLoggedDate] = useState(today());
+  const [loggedDate, setLoggedDate] = useState(todayLocal());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +26,7 @@ const AddWeightForm = ({ onLogged }: AddWeightFormProps) => {
     try {
       await weightService.createLog({ weight: parsedWeight, logged_date: loggedDate });
       setWeight('');
-      setLoggedDate(today());
+      setLoggedDate(todayLocal());
       onLogged();
     } catch (err) {
       setError('Could not save weight log. Please try again.');
@@ -58,7 +57,7 @@ const AddWeightForm = ({ onLogged }: AddWeightFormProps) => {
           type="date"
           value={loggedDate}
           onChange={(e) => setLoggedDate(e.target.value)}
-          max={today()}
+          max={todayLocal()}
           required
         />
       </div>
