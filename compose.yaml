@@ -15,6 +15,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - weigh2go-network
 
   backend:
     build:
@@ -46,6 +48,9 @@ services:
       - /app/node_modules
     environment:
       VITE_API_URL: http://localhost:8000/api
+      # Inside this container "localhost" is the frontend itself, so the Vite
+      # dev-server proxy must target the backend by its compose service name.
+      VITE_PROXY_TARGET: http://backend:8000
     depends_on:
       - backend
     networks:
