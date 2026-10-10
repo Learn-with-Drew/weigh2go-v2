@@ -3,17 +3,19 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginForm from '../../src/components/Auth/LoginForm';
 
 const loginMock = vi.fn();
+let mockError: string | null = null;
 
 vi.mock('../../src/hooks/useAuth', () => ({
   useAuth: () => ({
     login: loginMock,
-    error: null,
+    error: mockError,
   }),
 }));
 
 describe('LoginForm', () => {
   beforeEach(() => {
     loginMock.mockReset();
+    mockError = null;
   });
 
   it('renders email and password fields', () => {
@@ -39,21 +41,24 @@ describe('LoginForm', () => {
     });
   });
 
-  it('shows an error message when login fails', async () => {
-    loginMock.mockRejectedValueOnce(new Error('failed'));
+  it('shows the error reported by useAuth', () => {
+    mockError = 'Invalid email or password';
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: 'test@example.com' },
-    });
-    fireEvent.change(screen.getByLabelText(/password/i), {
-      target: { value: 'wrongpassword' },
-    });
+    expect(screen.getByRole('alert')).toHaveTextContent('Invalid email or password');
+  });
+
+  it('does not call onSuccess when login fails', async () => {
+    loginMock.mockRejectedValueOnce(new Error('failed'));
+    const onSuccess = vi.fn();
+    render(<LoginForm onSuccess={onSuccess} />);
+
+    fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'a@b.com' } });
+    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'wrongpassword' } });
     fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
-    await waitFor(() => {
-      expect(screen.getByRole('alert')).toBeInTheDocument();
-    });
+    await waitFor(() => expect(loginMock).toHaveBeenCalled());
+    expect(onSuccess).not.toHaveBeenCalled();
   });
 
   it('calls onSuccess after successful login', async () => {
