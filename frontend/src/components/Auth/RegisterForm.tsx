@@ -26,8 +26,8 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     try {
       await register(email, password);
       onSuccess?.();
-    } catch (err) {
-      setLocalError('Registration failed. That email may already be in use.');
+    } catch {
+      // useAuth has already set `error` with the real reason; show that.
     } finally {
       setIsSubmitting(false);
     }

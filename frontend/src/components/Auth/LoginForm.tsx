@@ -19,8 +19,8 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
     try {
       await login(email, password);
       onSuccess?.();
-    } catch (err) {
-      setLocalError('Login failed. Check your email and password.');
+    } catch {
+      // useAuth has already set `error` with the real reason; show that.
     } finally {
       setIsSubmitting(false);
     }
