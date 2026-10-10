@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { User } from '../types';
 import { authService } from '../services/authService';
-
-function getErrorMessage(err: unknown, fallback: string): string {
-  if (axios.isAxiosError(err)) {
-    return err.response?.data?.detail ?? fallback;
-  }
-  return fallback;
-}
+import { getErrorMessage } from '../utils/errors';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
