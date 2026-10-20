@@ -3,8 +3,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // In Docker the backend is reachable at http://backend:8000 (set in compose.yaml);
-// when running `npm run dev` directly on your machine it's on localhost.
-const apiTarget = process.env.VITE_PROXY_TARGET ?? 'http://localhost:8000'
+// when running `npm run dev` directly on your machine it's on this machine.
+const apiTarget = process.env.VITE_PROXY_TARGET ?? 'http://127.0.0.1:8000'
 
 export default defineConfig({
   plugins: [react()],
