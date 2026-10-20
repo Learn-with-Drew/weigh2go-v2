@@ -36,12 +36,21 @@ export const useAuth = () => {
   };
 
   const register = async (email: string, password: string) => {
+    setError(null);
     try {
-      setError(null);
-      const newUser = await authService.register({ email, password });
-      setUser(newUser);
+      await authService.register({ email, password });
     } catch (err) {
       setError(getErrorMessage(err, 'Registration failed'));
+      throw err;
+    }
+
+    // Registering doesn't sign you in (no cookie is set), so do that next.
+    try {
+      await authService.login({ email, password });
+      const currentUser = await authService.getCurrentUser();
+      setUser(currentUser);
+    } catch (err) {
+      setError('Account created, but signing in failed. Please log in.');
       throw err;
     }
   };
