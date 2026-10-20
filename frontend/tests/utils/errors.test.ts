@@ -17,9 +17,21 @@ describe('getErrorMessage', () => {
     expect(getErrorMessage(err, 'fallback')).toBe('Email already registered');
   });
 
-  it('falls back when detail is a list of validation errors (422)', () => {
-    const err = axiosErrorWithResponse(422, { detail: [{ loc: ['body', 'email'], msg: 'bad' }] });
-    expect(getErrorMessage(err, 'fallback')).toBe('fallback');
+  it('shows the first validation message for a 422', () => {
+    const err = axiosErrorWithResponse(422, {
+      detail: [{ loc: ['body', 'email'], msg: 'value is not a valid email address' }],
+    });
+    expect(getErrorMessage(err, 'fallback')).toBe('value is not a valid email address');
+  });
+
+  it('reports the status for a 5xx with no message (API down / proxy failure)', () => {
+    const err = axiosErrorWithResponse(500, '');
+    expect(getErrorMessage(err, 'fallback')).toMatch(/server had a problem \(HTTP 500\)/i);
+  });
+
+  it('includes the status in the fallback for other errors', () => {
+    const err = axiosErrorWithResponse(404, {});
+    expect(getErrorMessage(err, 'Registration failed')).toBe('Registration failed (HTTP 404).');
   });
 
   it('says the server is unreachable when there is no response', () => {
